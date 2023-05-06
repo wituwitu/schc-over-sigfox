@@ -1,4 +1,3 @@
-import os
 import unittest
 
 from utils.misc import zfill, replace_char, is_monochar, generate_packet, \
@@ -25,32 +24,29 @@ class TestMisc(unittest.TestCase):
         s = "1001111"
         z = replace_char(s, 10, '1')
 
-        self.assertEqual(s + '1', z)
+        self.assertEqual(s, z)
 
     def test_is_monochar(self):
         s = "1111111"
-
         self.assertTrue(is_monochar(s))
         self.assertTrue(is_monochar(s), '1')
         self.assertFalse(is_monochar(s, '0'))
 
-        s = ''
+        s = "10010110"
+        self.assertFalse(is_monochar(s, '0'))
+        self.assertFalse(is_monochar(s, '1'))
 
+        s = ''
         self.assertFalse(is_monochar(s))
 
     def test_generate_packet(self):
-        s = generate_packet(40)
+        s = generate_packet(10)
+        self.assertEqual(10, len(s))
+        self.assertEqual(b"0123456789", s)
 
-        self.assertEqual(40, len(s))
-
-        _ = generate_packet(1000, 'debug/packet')
-
-        with open("debug/packet", 'r', encoding="utf-8") as f:
-            p = f.read()
-
-        self.assertEqual(1000, len(p))
-
-        os.remove('debug/packet')
+        s = generate_packet(20)
+        self.assertEqual(20, len(s))
+        self.assertEqual(b"01234567890123456789", s)
 
     def test_next_multiple(self):
         self.assertEqual(14, round_to_next_multiple(8, 7))

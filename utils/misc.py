@@ -10,6 +10,7 @@ def zfill(string: str, length: int) -> str:
 
 def replace_char(string: str, position: int, new_char: str) -> str:
     """Replaces a single character in the specified position of a string."""
+    if position > len(string): return string
     return f"{string[:position]}{new_char}{string[position + 1:]}"
 
 
