@@ -13,7 +13,7 @@ from Messages.Fragment import Fragment
 from Messages.FragmentHeader import FragmentHeader
 from Messages.ReceiverAbort import ReceiverAbort
 from Messages.SenderAbort import SenderAbort
-from config.schc import UPLINK_MTU, DISABLE_INACTIVITY_TIMEOUT
+from config.schc import UPLINK_MTU_BITS, DISABLE_INACTIVITY_TIMEOUT
 from db.LocalStorage import LocalStorage
 
 
@@ -682,7 +682,7 @@ class TestSCHCReceiver(TestCase):
             ack = receiver.schc_recv(
                 Fragment(
                     FragmentHeader(rule, '', '01', '110'),
-                    b'\x1a\x2b' * UPLINK_MTU
+                    b'\x1a\x2b' * UPLINK_MTU_BITS
                 ), int(time.time())
             )
 

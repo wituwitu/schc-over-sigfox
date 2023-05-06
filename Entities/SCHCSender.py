@@ -12,7 +12,7 @@ from Messages.CompoundACK import CompoundACK
 from Messages.Fragment import Fragment
 from Messages.SenderAbort import SenderAbort
 from Sockets.SigfoxHTTPSocket import SigfoxHTTPSocket as Socket
-from config.schc import DOWNLINK_MTU, DISABLE_MAX_ACK_REQUESTS
+from config.schc import DOWNLINK_MTU_BITS, DISABLE_MAX_ACK_REQUESTS
 from db.FileStorage import FileStorage
 from utils.casting import bytes_to_hex, bin_to_int
 from utils.misc import replace_char, is_monochar, zfill
@@ -150,7 +150,7 @@ class SCHCSender:
             self.send(fragment)
 
             ack = self.recv(
-                DOWNLINK_MTU // 8
+                DOWNLINK_MTU_BITS // 8
             ) if enable_reception else None
 
             self.update_rt()

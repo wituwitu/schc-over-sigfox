@@ -5,7 +5,7 @@ from Entities.Rule import Rule
 from Entities.exceptions import LengthMismatchError
 from Messages.Fragment import Fragment
 from Messages.FragmentHeader import FragmentHeader
-from config.schc import UPLINK_MTU
+from config.schc import UPLINK_MTU_BITS
 from db.CommonFileStorage import CommonFileStorage as Storage
 from utils.casting import int_to_bin, bytes_to_bin
 
@@ -48,14 +48,14 @@ class Fragmenter:
                 self.RULE.U
             )
             header_length = self.RULE.ALL1_HEADER_LENGTH
-            payload_max_length = UPLINK_MTU - header_length
+            payload_max_length = UPLINK_MTU_BITS - header_length
         else:
             index = self.RULE.WINDOW_SIZE \
                     - (self.CURR_FRAG_NUMBER % self.RULE.WINDOW_SIZE) - 1
             fcn = int_to_bin(index, self.RULE.N)
             rcs = None
             header_length = self.RULE.HEADER_LENGTH
-            payload_max_length = UPLINK_MTU - header_length
+            payload_max_length = UPLINK_MTU_BITS - header_length
 
         header = FragmentHeader(self.RULE, dtag, w, fcn, rcs)
 
@@ -94,8 +94,8 @@ class Fragmenter:
         all_1_header_len = self.RULE.ALL1_HEADER_LENGTH
         max_fragment_number = self.RULE.MAX_FRAGMENT_NUMBER
 
-        payload_max_length = (UPLINK_MTU - header_len) // 8
-        all_1_payload = (UPLINK_MTU - all_1_header_len) // 8
+        payload_max_length = (UPLINK_MTU_BITS - header_len) // 8
+        all_1_payload = (UPLINK_MTU_BITS - all_1_header_len) // 8
 
         maximum_packet_size = payload_max_length * (
                 max_fragment_number - 1) + all_1_payload

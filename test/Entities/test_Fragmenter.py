@@ -6,7 +6,7 @@ import unittest
 from Entities.Fragmenter import Fragmenter
 from Entities.Rule import Rule
 from Entities.exceptions import LengthMismatchError
-from config.schc import UPLINK_MTU
+from config.schc import UPLINK_MTU_BITS
 from utils.casting import bin_to_hex, bin_to_bytes
 from utils.misc import generate_packet
 
@@ -90,7 +90,7 @@ class TestFragmenter(unittest.TestCase):
         fragmenter = Fragmenter(rule_0, "debug/unittest/sd")
         fragments = fragmenter.fragment(randbytes)
 
-        payload_max_length = (UPLINK_MTU - rule_0.HEADER_LENGTH) // 8
+        payload_max_length = (UPLINK_MTU_BITS - rule_0.HEADER_LENGTH) // 8
         number_of_fragments = -(len(randbytes) // -payload_max_length)
 
         self.assertTrue(number_of_fragments, len(fragments))
@@ -110,7 +110,7 @@ class TestFragmenter(unittest.TestCase):
         fragmenter = Fragmenter(rule_0, "debug/unittest/sd")
         fragments = fragmenter.fragment(multiple_eleven)
 
-        payload_max_length = (UPLINK_MTU - rule_0.HEADER_LENGTH) // 8
+        payload_max_length = (UPLINK_MTU_BITS - rule_0.HEADER_LENGTH) // 8
         number_of_fragments = -(
                 len(multiple_eleven) // -payload_max_length) + 1
 
@@ -129,7 +129,7 @@ class TestFragmenter(unittest.TestCase):
         fragmenter = Fragmenter(rule_0, "debug/unittest/sd")
         fragments = fragmenter.fragment(eleven)
 
-        payload_max_length = (UPLINK_MTU - rule_0.HEADER_LENGTH) // 8
+        payload_max_length = (UPLINK_MTU_BITS - rule_0.HEADER_LENGTH) // 8
         number_of_fragments = -(len(multiple_eleven) // -payload_max_length)
 
         self.assertEqual(2, number_of_fragments)

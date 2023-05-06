@@ -9,7 +9,7 @@ from Messages.CompoundACK import CompoundACK
 from Messages.Fragment import Fragment
 from Messages.Header import Header
 from Messages.ReceiverAbort import ReceiverAbort
-from config.schc import UPLINK_MTU, DISABLE_INACTIVITY_TIMEOUT
+from config.schc import UPLINK_MTU_BITS, DISABLE_INACTIVITY_TIMEOUT
 from db.JSONStorage import JSONStorage
 from utils.casting import int_to_bin, bin_to_int
 from utils.misc import replace_char
@@ -334,7 +334,7 @@ class SCHCReceiver:
             self.LOGGER.error("Inactivity Timer expired.")
             return self.generate_receiver_abort(fragment.HEADER)
 
-        if len(fragment.to_bin()) > UPLINK_MTU:
+        if len(fragment.to_bin()) > UPLINK_MTU_BITS:
             raise LengthMismatchError("Fragment is larger than uplink MTU.")
 
         self.STORAGE.write(timestamp, "state/TIMESTAMP")

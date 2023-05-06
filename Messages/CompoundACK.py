@@ -3,7 +3,7 @@ from typing import Optional
 from Entities.Rule import Rule
 from Entities.exceptions import LengthMismatchError, BadProfileError
 from Messages.ACK import ACK
-from config.schc import DOWNLINK_MTU
+from config.schc import DOWNLINK_MTU_BITS
 from utils.casting import hex_to_bin
 from utils.misc import is_monochar
 
@@ -49,7 +49,7 @@ class CompoundACK(ACK):
 
         as_bin = hex_to_bin(hex_string)
 
-        if len(as_bin) != DOWNLINK_MTU:
+        if len(as_bin) != DOWNLINK_MTU_BITS:
             raise LengthMismatchError(
                 "Compound ACK was not of length DOWNLINK_MTU."
             )

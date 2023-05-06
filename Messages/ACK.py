@@ -2,7 +2,7 @@ from Entities.Rule import Rule
 from Entities.exceptions import LengthMismatchError
 from Messages.ACKHeader import ACKHeader
 from config import schc as config
-from config.schc import DOWNLINK_MTU
+from config.schc import DOWNLINK_MTU_BITS
 from utils.casting import bin_to_hex, hex_to_bin
 from utils.misc import is_monochar
 
@@ -20,7 +20,7 @@ class ACK:
         self.RULE: Rule = rule
         self.BITMAP: str = bitmap
         self.HEADER: ACKHeader = ACKHeader(rule, dtag, w, c)
-        self.PADDING: str = padding + '0' * (DOWNLINK_MTU - len(
+        self.PADDING: str = padding + '0' * (DOWNLINK_MTU_BITS - len(
             self.HEADER.to_binary() + self.BITMAP + padding))
 
     def to_hex(self) -> str:
@@ -65,7 +65,7 @@ class ACK:
         """Creates an ACK from a hexadecimal string."""
         as_bin = hex_to_bin(hex_string)
 
-        if len(as_bin) != DOWNLINK_MTU:
+        if len(as_bin) != DOWNLINK_MTU_BITS:
             raise LengthMismatchError("ACK was not of length DOWNLINK_MTU.")
 
         rule = Rule.from_hex(hex_string)

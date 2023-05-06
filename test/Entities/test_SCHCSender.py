@@ -10,7 +10,7 @@ from Entities.Rule import Rule
 from Entities.SCHCSender import SCHCSender
 from Entities.exceptions import SCHCTimeoutError
 from Messages.Fragment import Fragment
-from config.schc import DOWNLINK_MTU
+from config.schc import DOWNLINK_MTU_BITS
 from utils.casting import bin_to_hex
 
 PORT = 1313
@@ -114,7 +114,7 @@ class TestSCHCSender(TestCase):
 
         sender.SOCKET.set_reception(True)
         sender.send(fragment)
-        ack = sender.recv(DOWNLINK_MTU)
+        ack = sender.recv(DOWNLINK_MTU_BITS)
 
         self.assertTrue(ack is not None)
         self.assertEqual('1c00000000000000', ack.to_hex())
@@ -131,7 +131,7 @@ class TestSCHCSender(TestCase):
         sender.send(fragment)
 
         with self.assertRaises(SCHCTimeoutError):
-            ack = sender.recv(DOWNLINK_MTU)
+            ack = sender.recv(DOWNLINK_MTU_BITS)
 
         self.assertTrue(sender.SOCKET.BUFFER.empty())
 
@@ -152,7 +152,7 @@ class TestSCHCSender(TestCase):
 
         sender.send(fragment)
         with self.assertRaises(SCHCTimeoutError):
-            ack = sender.recv(DOWNLINK_MTU)
+            ack = sender.recv(DOWNLINK_MTU_BITS)
         self.assertTrue(sender.SOCKET.BUFFER.empty())
         self.assertEqual({
             "fragment": {
@@ -165,7 +165,7 @@ class TestSCHCSender(TestCase):
         sender.ATTEMPTS += 1
 
         sender.send(fragment)
-        ack = sender.recv(DOWNLINK_MTU)
+        ack = sender.recv(DOWNLINK_MTU_BITS)
         self.assertTrue(ack is not None)
         self.assertEqual({
             "fragment": {

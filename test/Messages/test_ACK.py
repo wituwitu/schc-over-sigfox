@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from Entities.exceptions import LengthMismatchError
 from Messages.ACK import ACK
-from config.schc import DOWNLINK_MTU
+from config.schc import DOWNLINK_MTU_BITS
 from utils.casting import bin_to_hex, hex_to_bin
 
 
@@ -13,7 +13,7 @@ class TestACK(TestCase):
         as_hex = bin_to_hex(b)
         ack = ACK.from_hex(as_hex)
 
-        self.assertEqual(DOWNLINK_MTU, len(hex_to_bin(ack.to_hex())))
+        self.assertEqual(DOWNLINK_MTU_BITS, len(hex_to_bin(ack.to_hex())))
         self.assertEqual('000', ack.HEADER.RULE_ID)
         self.assertEqual('', ack.HEADER.DTAG)
         self.assertEqual('10', ack.HEADER.W)
