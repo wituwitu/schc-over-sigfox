@@ -2,7 +2,6 @@
 Module that contains functions used to transform between different data types.
 """
 import binascii
-from math import log
 
 from utils.misc import zfill
 
@@ -61,15 +60,3 @@ def bytes_to_hex(byt: bytes) -> str:
 def int_to_bin(num: int, length: int = 0) -> str:
     """Transforms an integer into its binary representation."""
     return zfill(bin(num)[2:], length)
-
-
-def int_to_hex(num: int) -> str:
-    """Transforms an integer into its hexadecimal representation."""
-    return hex(num)[2:]
-
-
-def int_to_bytes(num: int, length: int = None) -> bytes:
-    """Transforms an integer into its byte representation."""
-    if length is None:
-        length = int(log(num, 256)) + 1 if num != 0 else 1
-    return num.to_bytes(length, byteorder='big')

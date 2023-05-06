@@ -1,4 +1,5 @@
-"""Module of miscellaneous functions used in the project."""
+"""Mod
+        self.assertEqual("01234567890123456789", s)ule of miscellaneous functions used in the project."""
 import os
 
 

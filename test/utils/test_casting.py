@@ -2,7 +2,7 @@ import unittest
 
 from utils.casting import bin_to_int, bin_to_hex, bin_to_bytes, \
     hex_to_bin, hex_to_bytes, bytes_to_bin, \
-    bytes_to_hex, int_to_bin, int_to_hex, int_to_bytes
+    bytes_to_hex, int_to_bin
 
 
 class TestCasting(unittest.TestCase):
@@ -10,6 +10,15 @@ class TestCasting(unittest.TestCase):
     def test_bin_to_int(self):
         b = '11010010'
         self.assertEqual(210, bin_to_int(b))
+
+        b = '000011010010'
+        self.assertEqual(210, bin_to_int(b))
+
+        b = '111111111111'
+        self.assertEqual(4095, bin_to_int(b))
+
+        b = '111000'
+        self.assertEqual(56, bin_to_int(b))
 
     def test_bin_to_hex(self):
         b = '11010010'
@@ -44,11 +53,3 @@ class TestCasting(unittest.TestCase):
         n = 210
         self.assertEqual('11010010', int_to_bin(n))
         self.assertEqual('000011010010', int_to_bin(n, 12))
-
-    def test_int_to_hex(self):
-        n = 210
-        self.assertEqual('d2', int_to_hex(n))
-
-    def test_int_to_bytes(self):
-        n = 210
-        self.assertEqual(b'\xd2', int_to_bytes(n))
