@@ -1,4 +1,3 @@
-import json
 import os
 import shutil
 import unittest
@@ -7,7 +6,6 @@ from Entities.Fragmenter import Fragmenter
 from Entities.Rule import Rule
 from Entities.exceptions import LengthMismatchError
 from config.schc import UPLINK_MTU_BITS
-from utils.casting import bin_to_hex, bin_to_bytes
 from utils.misc import generate_packet
 
 
@@ -22,49 +20,6 @@ class TestFragmenter(unittest.TestCase):
         self.assertTrue(os.path.exists("debug/unittest/sd/rule_0/fragments"))
 
         shutil.rmtree("debug/unittest/sd")
-
-    def test_generate_fragment(self):
-        rule_0 = Rule('000')
-        fragmenter = Fragmenter(rule_0, "debug/unittest/sd")
-
-        self.assertEqual(0, fragmenter.CURR_FRAG_NUMBER)
-
-        fragment = fragmenter.generate_fragment(b'\xde\xad\xca\xfe', all_1=False)
-        self.assertEqual(rule_0.ID, fragment.RULE.ID)
-        self.assertEqual('', fragment.HEADER.DTAG)
-        self.assertEqual('00', fragment.HEADER.W)
-        self.assertEqual('110', fragment.HEADER.FCN)
-        self.assertEqual('', fragment.HEADER.RCS)
-
-        with open("debug/unittest/sd/rule_0/fragments/fragment_w0f0", 'r', encoding="utf-8") as f:
-            fragment_data = json.load(f)
-
-        self.assertEqual({
-            "hex": bin_to_hex("00000110") + "deadcafe",
-            "sent": False
-        }, fragment_data)
-
-        self.assertEqual(1, fragmenter.CURR_FRAG_NUMBER)
-
-        _ = fragmenter.generate_fragment(b'\xde\xad\xca\xfe', all_1=False)
-        _ = fragmenter.generate_fragment(b'\xde\xad\xca\xfe', all_1=False)
-        _ = fragmenter.generate_fragment(b'\xde\xad\xca\xfe', all_1=False)
-        _ = fragmenter.generate_fragment(b'\xde\xad\xca\xfe', all_1=False)
-        _ = fragmenter.generate_fragment(b'\xde\xad\xca\xfe', all_1=False)
-        all_0 = fragmenter.generate_fragment(b'\xde\xad\xca\xfe', all_1=False)
-
-        self.assertTrue(all_0.is_all_0())
-        self.assertEqual('00', fragment.HEADER.W)
-
-        all_1 = fragmenter.generate_fragment(b'\xde\xad\xca\xfe', all_1=True)
-        self.assertTrue(all_1.is_all_1())
-        self.assertEqual('01', all_1.HEADER.W)
-        self.assertEqual('001', all_1.HEADER.RCS)
-
-        eleven_byte = '1' * 88
-        with self.assertRaises(LengthMismatchError):
-            all_1 = fragmenter.generate_fragment(bin_to_bytes(eleven_byte),
-                                                 all_1=True)
 
     def test_fragment(self):
         randbytes = b'\xf8\xdb\x80\x1b~!\x11?\x87<\xb1\xe3/I\xe2\xf5\x13\xcd' \

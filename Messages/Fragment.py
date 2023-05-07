@@ -5,7 +5,8 @@ import config.schc as config
 from Entities.Rule import Rule
 from Entities.exceptions import LengthMismatchError, BadProfileError
 from Messages.FragmentHeader import FragmentHeader
-from utils.casting import bytes_to_hex, hex_to_bin, hex_to_bytes, bytes_to_bin
+from utils.casting import bytes_to_hex, hex_to_bin, hex_to_bytes, bytes_to_bin, \
+    int_to_bin
 from utils.misc import is_monochar, round_to_next_multiple, zfill
 
 
@@ -150,3 +151,30 @@ class Fragment:
             fragment_data = json.load(fil)
         fragment = fragment_data["hex"]
         return Fragment.from_hex(fragment)
+
+    @staticmethod
+    def generate_frg(rule: Rule, payload: bytes, nb_frag: int,
+                     all_1: bool) -> 'Fragment':
+        """Generates a SCHC Fragment and stores it in a Fragment object."""
+
+        byte_size = len(payload)
+
+        if byte_size * 8 > rule.REGULAR_PAYLOAD_LENGTH:
+            raise LengthMismatchError(
+                "Payload is larger than its maximum size")
+
+        dtag = ''
+        w = int_to_bin(nb_frag / rule.WINDOW_SIZE, rule.M)
+
+        if all_1:
+            fcn = '1' * rule.N
+            nb_frgs_in_last_window = nb_frag % rule.WINDOW_SIZE + 1
+            rcs = int_to_bin(nb_frgs_in_last_window, rule.U)
+        else:
+            frg_idx = rule.WINDOW_SIZE - (nb_frag % rule.WINDOW_SIZE) - 1
+            fcn = int_to_bin(frg_idx, rule.N)
+            rcs = ''
+
+        header = FragmentHeader(rule, dtag, w, fcn, rcs)
+
+        return Fragment(header, payload)

@@ -15,13 +15,13 @@ class Header:
 
         self.RULE: Rule = rule
 
-        if len(rule.STR) != rule.RULE_ID_SIZE:
+        if len(rule.BIN) != rule.RULE_ID_SIZE:
             raise LengthMismatchError(
                 f"RULE must be of length RULE_ID_SIZE "
                 f"({rule.RULE_ID_SIZE}). "
-                f"Rule was {rule.STR}, "
-                f"length = {len(rule.STR)}.")
-        self.RULE_ID: str = rule.STR
+                f"Rule was {rule.BIN}, "
+                f"length = {len(rule.BIN)}.")
+        self.RULE_ID: str = rule.BIN
 
         if rule.T == 0:
             self.DTAG: str = ""
